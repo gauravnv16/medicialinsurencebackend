@@ -73,7 +73,7 @@ app.post('/api/register',urlencodedParser,(req,res) => {
                 notes:'',
                 messages:[],
                 Proof_Verified_Status:false,
-                ApprovalType:'Profile',
+                ApprovalType:'Profile Approval',
         });
             user.save((err,res) => {
                 if (err) throw err;
@@ -91,8 +91,15 @@ app.get('/api/user/:id/approve',(req,res) => {
     })
 });
 
+app.post('/api/user/:id/update',urlencodedParser,(req,res) => {
+    User.updateOne({Id:req.params.id},req.query,(err,msg) => {
+        console.log(msg)
+    })
+});
+
 
 app.post('/api/user/file',urlencodedParser,(req,res) => {
+    console.log(req.query)
     if(req.query.type === 'pic'){
         User.updateOne({Id:req.query.id},{Pic:req.query.pic},(err,msg) => {
             console.log(msg)
@@ -100,12 +107,14 @@ app.post('/api/user/file',urlencodedParser,(req,res) => {
     }
     else if(req.query.type == 'proof') {
         User.updateOne({Id:req.query.id},{Proof:req.query.proof},(err,msg) => {
-            res.send("Updated");
+            // res.send("Updated");
+        }) 
+    } else if (req.query.type == 'ProofPic') {
+        User.updateOne({Id:req.query.id},{ProofPic:req.query.pic,isApproved:false,ApprovalType:'Policy Claim'},(err,msg) => {
+            // res.send("Updated");
+            console.log(msg)
         }) 
     }
-    res.send("success")
-    // console.log(req.query)
-
 })
 
 app.listen(PORT);
