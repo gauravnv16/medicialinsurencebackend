@@ -41,7 +41,7 @@ app.post('/api/login',urlencodedParser,(req,res) => {
     });
 });
 
-//login
+//logi
 
 app.post('/api/register',urlencodedParser,(req,res) => {
     const uname = req.query.uname;
