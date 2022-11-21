@@ -19,7 +19,10 @@ const UserSchema = new mongoose.Schema({
     isApproved:Boolean,
     notes:String,
     messages:[],
-    Proof_Verified_Status:Boolean
+    Proof_Verified_Status:Boolean,
+
+    ApprovalType:String,
+    ProofPic:''
 });
 
 module.exports = mongoose.model('User',UserSchema);

@@ -28,6 +28,12 @@ app.get('/api/users',(req,res) => {
     });
 });
 
+app.get('/api/user/:id',(req,res) => {
+    User.find({Id:req.params.id},(err,result) => {
+        res.send(result);
+    });
+});
+
 app.post('/api/login',urlencodedParser,(req,res) => {
     const uname = req.query.uname;
     const pass = req.query.pass;
@@ -36,7 +42,6 @@ app.post('/api/login',urlencodedParser,(req,res) => {
             res.send(
                 result
             )
-            console.log("completed")
         });
     });
 });
@@ -46,8 +51,6 @@ app.post('/api/login',urlencodedParser,(req,res) => {
 app.post('/api/register',urlencodedParser,(req,res) => {
     const uname = req.query.uname;
     const email = req.query.email;
-    console.log("[+] got the request!!!");
-    console.log("[+] processing request!!!");
     bcrypt.hash(req.query.pass,10,(err,result) => {
         if(result!=undefined){
             const user = new User({
@@ -69,7 +72,8 @@ app.post('/api/register',urlencodedParser,(req,res) => {
                 isApproved:false,
                 notes:'',
                 messages:[],
-                Proof_Verified_Status:false
+                Proof_Verified_Status:false,
+                ApprovalType:'Profile',
         });
             user.save((err,res) => {
                 if (err) throw err;
@@ -79,7 +83,29 @@ app.post('/api/register',urlencodedParser,(req,res) => {
     });
 })
 
+// API_URL+'api/user/'+params.id+"/approve"
+app.get('/api/user/:id/approve',(req,res) => {
+    User.updateOne({Id:req.params.id},{isApproved:true,ApprovalType:''},(err,msg) => {
+        res.send("Updated");
+        console.log("Approved")
+    })
+});
 
 
+app.post('/api/user/file',urlencodedParser,(req,res) => {
+    if(req.query.type === 'pic'){
+        User.updateOne({Id:req.query.id},{Pic:req.query.pic},(err,msg) => {
+            console.log(msg)
+        }) 
+    }
+    else if(req.query.type == 'proof') {
+        User.updateOne({Id:req.query.id},{Proof:req.query.proof},(err,msg) => {
+            res.send("Updated");
+        }) 
+    }
+    res.send("success")
+    // console.log(req.query)
+
+})
 
 app.listen(PORT);
