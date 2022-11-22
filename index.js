@@ -9,6 +9,7 @@ const User = require('./Users/Users');
 const bcrypt = require('bcrypt');
 const urlencodedParser = bodyParser.urlencoded({ extended: true });
 const uuid = require('uuid');
+const Description = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cumque distinctio consequuntur, non reiciendis deleniti veritatis! Ipsum, deserunt! Ab sunt eum fugiat molestias rerum sint qui necessitatibus, alias veniam dignissimos suscipit voluptate quae tempore id. Nihil iusto sed corrupti temporibus commodi minus qui totam odit harum? Iste omnis dicta eaque deserunt ratione, magni aut nulla natus, cumque qui eum iure odio in eligendi dolorum deleniti excepturi dolor voluptate. Repellendus quos optio voluptates recusandae harum voluptatibus laboriosam quasi, autem sunt vel voluptatem nisi, nesciunt nostrum mollitia laudantium similique quas soluta, voluptate accusantium hic eius. Molestias voluptatibus dicta molestiae, temporibus pariatur unde nisi.'
 mongoose.connect(`mongodb+srv://Gaurav_nv:Amirtha28@cluster0.83xxr.mongodb.net/medicalinsurence?retryWrites=true&w=majority`,() => {
 
 });
@@ -53,31 +54,63 @@ app.post('/api/register',urlencodedParser,(req,res) => {
     const email = req.query.email;
     bcrypt.hash(req.query.pass,10,(err,result) => {
         if(result!=undefined){
-            const user = new User({
-                Id:uuid.v4(),
-                Name:'',
-                Username:uname,
-                Phone_no:'',
-                Email:email,
-                Gender:'',
-                Alternate:[],
-                Password:result,
-                Address:'',
-                Pic:'',
-                Proof_file:String,
-                Proof_type:String,
-                Policy:[],
-                isAdmin:false,
-                isEditable:false,
-                isApproved:false,
-                notes:'',
-                messages:[],
-                Proof_Verified_Status:false,
-                ApprovalType:'Profile Approval',
-        });
-            user.save((err,res) => {
-                if (err) throw err;
+            const user = {
+                        Id:uuid.v4(),
+                        Userpolicyname:'',
+                        Userpolicydescription:'',
+                        Name:'',
+                        Username:uname,
+                        Phone_no:'',
+                        Email:email,
+                        Gender:'',
+                        Alternate:[],
+                        Password:result,
+                        Address:'',
+                        Pic:'',
+                        Proof_file:String,
+                        Proof_type:String,
+                        isAdmin:false,
+                        isEditable:false,
+                        isApproved:false,
+                        notes:'',
+                        messages:[],
+                        Proof_Verified_Status:false,
+                        ProofPic:'',
+                        ApprovalType:'Profile Approval',
+                     
+                };
+            User.insertMany([user],(err,resu) => {
+                res.send("success")
             })
+        //     const user = new User({
+        //         Id:uuid.v4(),
+        //         Userpolicyname:'',
+        //         Userpolicydescription:'',
+        //         Name:'',
+        //         Username:uname,
+        //         Phone_no:'',
+        //         Email:email,
+        //         Gender:'',
+        //         Alternate:[],
+        //         Password:result,
+        //         Address:'',
+        //         Pic:'',
+        //         Proof_file:String,
+        //         Proof_type:String,
+        //         isAdmin:false,
+        //         isEditable:false,
+        //         isApproved:false,
+        //         notes:'',
+        //         messages:[],
+        //         Proof_Verified_Status:false,
+        //         ApprovalType:'Profile Approval',
+             
+        // });
+        //     user.save((err,resu) => {
+        //         if (err) throw err;
+        //         console.log(resu);
+        //         res.send("Success");
+        //     })
             
         }
     });
@@ -99,6 +132,7 @@ app.post('/api/user/:id/update',urlencodedParser,(req,res) => {
 
 
 app.post('/api/user/file',urlencodedParser,(req,res) => {
+    console.log("requexted");
     console.log(req.query)
     if(req.query.type === 'pic'){
         User.updateOne({Id:req.query.id},{Pic:req.query.pic},(err,msg) => {
@@ -110,7 +144,8 @@ app.post('/api/user/file',urlencodedParser,(req,res) => {
             // res.send("Updated");
         }) 
     } else if (req.query.type == 'ProofPic') {
-        User.updateOne({Id:req.query.id},{ProofPic:req.query.pic,isApproved:false,ApprovalType:'Policy Claim'},(err,msg) => {
+        
+        User.updateOne({Id:req.query.id},{ProofPic:req.query.pic,isApproved:false,ApprovalType:'Policy Claim',Userpolicyname:req.query.policyname, Userpolicydescription:Description},(err,msg) => {
             // res.send("Updated");
             console.log(msg)
         }) 

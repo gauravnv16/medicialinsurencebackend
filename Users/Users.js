@@ -13,10 +13,6 @@ const UserSchema = new mongoose.Schema({
     Pic:String,
     Proof_file:String,
     Proof_type:String,
-    Policy:{
-        name:String,
-        Description:String
-    },
     isAdmin:Boolean,
     isEditable:Boolean,
     isApproved:Boolean,
@@ -25,7 +21,9 @@ const UserSchema = new mongoose.Schema({
     Proof_Verified_Status:Boolean,
 
     ApprovalType:String,
-    ProofPic:'',
+    ProofPic:String,
+    Userpolicyname:String,
+    Userpolicydescription:String
 
 });
 
